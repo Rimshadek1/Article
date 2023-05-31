@@ -43,8 +43,10 @@ module.exports = {
         .get()
         .collection(collection.userCollection)
         .findOne({ email: userData.email });
+
       if (user) {
         const match = await bcrypt.compare(userData.password, user.password);
+
         if (match) {
           return { status: true, user: user };
         } else {
@@ -57,6 +59,7 @@ module.exports = {
       throw error;
     }
   },
+
   createArticle: (article, user) => {
     return new Promise((resolve, reject) => {
       article.user = user;
@@ -68,29 +71,28 @@ module.exports = {
       });
     });
   },
+
   viewArticle: () => {
     return new Promise((resolve, reject) => {
       let article = db.get().collection(collection.articleCollection).find().toArray();
-      resolve(article)
+      resolve(article);
     });
   },
+
   updateProfile: async (user, details) => {
-
     try {
-      await db.get().collection(collection.userCollection).updateOne({ _id: new ObjectId(user) }, {
-
-        $set: {
-          username: details.username,
-          age: details.age
+      await db.get().collection(collection.userCollection).updateOne(
+        { _id: new ObjectId(user) },
+        {
+          $set: {
+            username: details.username,
+            age: details.age
+          }
         }
-      });
-
+      );
     } catch (error) {
       console.log('error');
       throw error;
     }
   }
-
-
-
 };
